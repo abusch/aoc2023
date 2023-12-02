@@ -7,39 +7,42 @@ use nom::{
     IResult,
 };
 
-pub fn run() -> Result<()> {
-    let data = std::fs::read_to_string("inputs/day01.txt")?;
-    let total: u32 = data
-        .lines()
-        .map(|line| {
-            let digits = line
-                .chars()
-                .filter_map(|c| c.to_digit(10))
-                .collect::<Vec<_>>();
-            let d1 = digits.first().copied().expect("Line has no digits!");
-            let d2 = digits.last().copied().expect("Line has no digits!");
-            d1 * 10 + d2
-        })
-        .sum();
+pub struct Day;
 
-    println!("Part1: {total}");
+impl aoc2023::Day for Day {
+    fn part1(&self, input: &str) -> Result<String> {
+        let total: u32 = input
+            .lines()
+            .map(|line| {
+                let digits = line
+                    .chars()
+                    .filter_map(|c| c.to_digit(10))
+                    .collect::<Vec<_>>();
+                let d1 = digits.first().copied().expect("Line has no digits!");
+                let d2 = digits.last().copied().expect("Line has no digits!");
+                d1 * 10 + d2
+            })
+            .sum();
 
-    let total: u32 = data
-        .lines()
-        .map(|line| {
-            let bytes = line.as_bytes();
-            let digits = (0..bytes.len())
-                .filter_map(|i| parse_digit(&bytes[i..]).ok().map(|(_rest, digit)| digit))
-                .collect::<Vec<_>>();
-            let d1 = digits.first().copied().expect("Line has no digits!");
-            let d2 = digits.last().copied().expect("Line has no digits!");
-            d1 * 10 + d2
-        })
-        .sum();
+        Ok(format!("{total}"))
+    }
 
-    println!("Part2: {total}");
+    fn part2(&self, input: &str) -> Result<String> {
+        let total: u32 = input
+            .lines()
+            .map(|line| {
+                let bytes = line.as_bytes();
+                let digits = (0..bytes.len())
+                    .filter_map(|i| parse_digit(&bytes[i..]).ok().map(|(_rest, digit)| digit))
+                    .collect::<Vec<_>>();
+                let d1 = digits.first().copied().expect("Line has no digits!");
+                let d2 = digits.last().copied().expect("Line has no digits!");
+                d1 * 10 + d2
+            })
+            .sum();
 
-    Ok(())
+        Ok(format!("{total}"))
+    }
 }
 
 fn parse_digit(input: &[u8]) -> IResult<&[u8], u32> {
