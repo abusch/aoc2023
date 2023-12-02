@@ -1,4 +1,4 @@
-use eyre::Result;
+use color_eyre::Result;
 use nom::{
     branch::alt,
     bytes::complete::tag,

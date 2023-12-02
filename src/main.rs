@@ -1,4 +1,4 @@
-use eyre::Result;
+use color_eyre::Result;
 
 mod day01;
 // mod day02;
@@ -17,6 +17,7 @@ mod day01;
 // mod day15;
 
 fn main() -> Result<()> {
+    color_eyre::install()?;
     day01::run()?;
     // day02::run()?;
     // day03::run()?;
