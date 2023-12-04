@@ -48,14 +48,16 @@ impl aoc2023::Day for Day {
 
 struct Card {
     card_num: u32,
-    winning_nums: Vec<u32>,
+    winning_nums: HashSet<u32>,
     nums: Vec<u32>,
 }
 
 impl Card {
     pub fn matches(&self) -> usize {
-        let winnings = self.winning_nums.iter().copied().collect::<HashSet<_>>();
-        self.nums.iter().filter(|n| winnings.contains(*n)).count()
+        self.nums
+            .iter()
+            .filter(|n| self.winning_nums.contains(*n))
+            .count()
     }
 
     pub fn value(&self) -> u32 {
@@ -78,7 +80,7 @@ fn parse_card(input: &str) -> IResult<&str, Card> {
         )),
         |(n, winning, _, nums)| Card {
             card_num: n,
-            winning_nums: winning,
+            winning_nums: winning.into_iter().collect(),
             nums,
         },
     )(input)
