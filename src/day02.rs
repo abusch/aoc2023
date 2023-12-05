@@ -1,5 +1,6 @@
 use std::ops::Add;
 
+use aoc2023::Day;
 use color_eyre::Result;
 use nom::{
     branch::alt,
@@ -11,37 +12,37 @@ use nom::{
     IResult,
 };
 
-pub struct Day;
+inventory::submit! {
+    Day::new(2, part1, part2)
+}
 
-impl aoc2023::Day for Day {
-    fn part1(&self, input: &str) -> Result<String> {
-        let total: u32 = input
-            .lines()
-            .map(|line| {
-                let (_, game) = parse_game(line).expect("Invalid line");
-                game
-            })
-            .filter_map(|game| game.matches(12, 13, 14).then_some(game.0))
-            .sum();
+fn part1(input: &str) -> Result<String> {
+    let total: u32 = input
+        .lines()
+        .map(|line| {
+            let (_, game) = parse_game(line).expect("Invalid line");
+            game
+        })
+        .filter_map(|game| game.matches(12, 13, 14).then_some(game.0))
+        .sum();
 
-        Ok(format!("{total}"))
-    }
+    Ok(format!("{total}"))
+}
 
-    fn part2(&self, input: &str) -> Result<String> {
-        let total: u32 = input
-            .lines()
-            .map(|line| {
-                let (_, game) = parse_game(line).expect("Invalid line");
-                game
-            })
-            .map(|game| {
-                let set = game.min_color_set();
-                set.power()
-            })
-            .sum();
+fn part2(input: &str) -> Result<String> {
+    let total: u32 = input
+        .lines()
+        .map(|line| {
+            let (_, game) = parse_game(line).expect("Invalid line");
+            game
+        })
+        .map(|game| {
+            let set = game.min_color_set();
+            set.power()
+        })
+        .sum();
 
-        Ok(format!("{total}"))
-    }
+    Ok(format!("{total}"))
 }
 
 #[derive(Debug, Default, Clone, Copy, PartialEq, Eq)]
@@ -153,21 +154,18 @@ fn parse_game(input: &str) -> IResult<&str, Game> {
 
 #[cfg(test)]
 mod tests {
-    use aoc2023::Day;
-
     use super::*;
 
     #[test]
     fn test_part2() {
-        let res = Day
-            .part2(
-                "Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green
+        let res = part2(
+            "Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green
 Game 2: 1 blue, 2 green; 3 green, 4 blue, 1 red; 1 green, 1 blue
 Game 3: 8 green, 6 blue, 20 red; 5 blue, 4 red, 13 green; 5 green, 1 red
 Game 4: 1 green, 3 red, 6 blue; 3 green, 6 red; 3 green, 15 blue, 14 red
 Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green",
-            )
-            .unwrap();
+        )
+        .unwrap();
         assert_eq!(res, "2286")
     }
 }

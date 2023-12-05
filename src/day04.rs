@@ -1,5 +1,6 @@
 use std::collections::{HashSet, VecDeque};
 
+use aoc2023::Day;
 use color_eyre::Result;
 use nom::{
     bytes::complete::tag,
@@ -10,40 +11,40 @@ use nom::{
     IResult,
 };
 
-pub struct Day;
+inventory::submit! {
+    Day::new(4, part1, part2)
+}
 
-impl aoc2023::Day for Day {
-    fn part1(&self, input: &str) -> Result<String> {
-        let cards = input
-            .lines()
-            .map(|line| parse_card(line).expect("invalid line!").1)
-            .collect::<Vec<_>>();
+fn part1(input: &str) -> Result<String> {
+    let cards = input
+        .lines()
+        .map(|line| parse_card(line).expect("invalid line!").1)
+        .collect::<Vec<_>>();
 
-        let total = cards.into_iter().map(|c| c.value()).sum::<u32>();
-        Ok(format!("{total}"))
-    }
+    let total = cards.into_iter().map(|c| c.value()).sum::<u32>();
+    Ok(format!("{total}"))
+}
 
-    fn part2(&self, input: &str) -> Result<String> {
-        let cards = input
-            .lines()
-            .map(|line| parse_card(line).expect("invalid line!").1)
-            .collect::<Vec<_>>();
+fn part2(input: &str) -> Result<String> {
+    let cards = input
+        .lines()
+        .map(|line| parse_card(line).expect("invalid line!").1)
+        .collect::<Vec<_>>();
 
-        let mut to_process = cards.iter().map(|c| c.card_num).collect::<VecDeque<_>>();
+    let mut to_process = cards.iter().map(|c| c.card_num).collect::<VecDeque<_>>();
 
-        let mut count = 0;
-        while let Some(n) = to_process.pop_front() {
-            count += 1;
-            let c = &cards[n as usize - 1];
-            let matches = c.matches() as u32;
-            if matches != 0 {
-                let copies_range = n + 1..=n + matches;
-                to_process.extend(copies_range);
-            }
+    let mut count = 0;
+    while let Some(n) = to_process.pop_front() {
+        count += 1;
+        let c = &cards[n as usize - 1];
+        let matches = c.matches() as u32;
+        if matches != 0 {
+            let copies_range = n + 1..=n + matches;
+            to_process.extend(copies_range);
         }
-
-        Ok(format!("{count}"))
     }
+
+    Ok(format!("{count}"))
 }
 
 struct Card {
@@ -89,36 +90,33 @@ fn parse_card(input: &str) -> IResult<&str, Card> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use aoc2023::Day as _;
 
     #[test]
     fn test_part1() {
-        let total = Day
-            .part1(
-                "Card 1: 41 48 83 86 17 | 83 86  6 31 17  9 48 53
+        let total = part1(
+            "Card 1: 41 48 83 86 17 | 83 86  6 31 17  9 48 53
 Card 2: 13 32 20 16 61 | 61 30 68 82 17 32 24 19
 Card 3:  1 21 53 59 44 | 69 82 63 72 16 21 14  1
 Card 4: 41 92 73 84 69 | 59 84 76 51 58  5 54 83
 Card 5: 87 83 26 28 32 | 88 30 70 12 93 22 82 36
 Card 6: 31 18 13 56 72 | 74 77 10 23 35 67 36 11",
-            )
-            .unwrap();
+        )
+        .unwrap();
 
         assert_eq!(total, "13");
     }
 
     #[test]
     fn test_part2() {
-        let total = Day
-            .part2(
-                "Card 1: 41 48 83 86 17 | 83 86  6 31 17  9 48 53
+        let total = part2(
+            "Card 1: 41 48 83 86 17 | 83 86  6 31 17  9 48 53
 Card 2: 13 32 20 16 61 | 61 30 68 82 17 32 24 19
 Card 3:  1 21 53 59 44 | 69 82 63 72 16 21 14  1
 Card 4: 41 92 73 84 69 | 59 84 76 51 58  5 54 83
 Card 5: 87 83 26 28 32 | 88 30 70 12 93 22 82 36
 Card 6: 31 18 13 56 72 | 74 77 10 23 35 67 36 11",
-            )
-            .unwrap();
+        )
+        .unwrap();
 
         assert_eq!(total, "30");
     }

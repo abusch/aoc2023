@@ -1,7 +1,4 @@
-use color_eyre::{
-    eyre::{bail, Context},
-    Result,
-};
+use color_eyre::{eyre::Context, Result};
 use nu_ansi_term::{Color, Style};
 use num_enum::IntoPrimitive;
 use std::{collections::BTreeMap, fmt::Display};
@@ -19,34 +16,22 @@ impl Display for Part {
     }
 }
 
-pub trait Day {
-    fn part1(&self, _input: &str) -> Result<String> {
-        bail!("Not implemented yet!");
-    }
+inventory::collect!(Day);
 
-    fn part2(&self, _input: &str) -> Result<String> {
-        bail!("Not implemented yet!");
-    }
+type PartFn = fn(&str) -> Result<String>;
 
-    fn part(&self, part: Part, input: &str) -> Result<String> {
-        match part {
-            Part::P1 => self.part1(input),
-            Part::P2 => self.part2(input),
-        }
-    }
-}
-
-pub struct Runner {
+pub struct Day {
+    /// Day number
     n: usize,
-    day: Box<dyn Day>,
+    /// Part 1
+    part1: PartFn,
+    /// Part 2
+    part2: PartFn,
 }
 
-impl Runner {
-    pub fn new(n: usize, day: impl Day + 'static) -> Self {
-        Self {
-            n,
-            day: Box::new(day),
-        }
+impl Day {
+    pub const fn new(n: usize, part1: PartFn, part2: PartFn) -> Self {
+        Self { n, part1, part2 }
     }
 
     fn log_day(&self) {
@@ -70,8 +55,15 @@ impl Runner {
             .wrap_err("Failed to load input file")
     }
 
+    fn part(&self, part: Part, input: &str) -> Result<String> {
+        match part {
+            Part::P1 => (self.part1)(input),
+            Part::P2 => (self.part2)(input),
+        }
+    }
+
     fn run_part(&self, part: Part, input: &str) {
-        let res = self.day.part(part, input);
+        let res = self.part(part, input);
         self.log_part_result(part, res);
     }
 
@@ -91,15 +83,22 @@ impl Runner {
 }
 
 #[derive(Default)]
-pub struct AoC(BTreeMap<usize, Runner>);
+pub struct AoC(BTreeMap<usize, &'static Day>);
 impl AoC {
-    pub fn register(&mut self, n: usize, day: impl Day + 'static) {
-        self.0.insert(n, Runner::new(n, day));
+    // pub fn register(&mut self, n: usize, day: impl Day + 'static) {
+    //     self.0.insert(n, Runner::new(n, day));
+    // }
+    pub fn new() -> Self {
+        let mut days = BTreeMap::default();
+        for day in inventory::iter::<Day> {
+            days.insert(day.n, day);
+        }
+        Self(days)
     }
 
     pub fn run_day(&self, n: usize) -> Result<()> {
-        if let Some(runner) = self.0.get(&n) {
-            runner.run(None)?;
+        if let Some(day) = self.0.get(&n) {
+            day.run(None)?;
         } else {
             println!("Day {:02} not implemented yet!", n);
         }

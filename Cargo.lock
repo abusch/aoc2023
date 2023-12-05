@@ -31,6 +31,7 @@ name = "aoc2023"
 version = "0.1.0"
 dependencies = [
  "color-eyre",
+ "inventory",
  "itertools",
  "nom",
  "nu-ansi-term",
@@ -165,6 +166,12 @@ checksum = "276ec31bcb4a9ee45f58bec6f9ec700ae4cf4f4f8f2fa7e06cb406bd5ffdd770"
 dependencies = [
  "num-traits",
 ]
+
+[[package]]
+name = "inventory"
+version = "0.3.13"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0508c56cfe9bfd5dfeb0c22ab9a6abfda2f27bdca422132e494266351ed8d83c"
 
 [[package]]
 name = "itertools"

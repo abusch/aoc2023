@@ -1,25 +1,26 @@
+use aoc2023::Day;
 use color_eyre::Result;
 use itertools::Itertools;
 use regex::{self, Regex};
 
-pub struct Day;
+inventory::submit! {
+    Day::new(3, part1, part2)
+}
 
-impl aoc2023::Day for Day {
-    fn part1(&self, input: &str) -> Result<String> {
-        let schematics = Schematics::new(input);
+fn part1(input: &str) -> Result<String> {
+    let schematics = Schematics::new(input);
 
-        let total: u32 = schematics.part_numbers_sum();
+    let total: u32 = schematics.part_numbers_sum();
 
-        Ok(format!("{total}"))
-    }
+    Ok(format!("{total}"))
+}
 
-    fn part2(&self, input: &str) -> Result<String> {
-        let schematics = Schematics::new(input);
+fn part2(input: &str) -> Result<String> {
+    let schematics = Schematics::new(input);
 
-        let total: u32 = schematics.gear_ratios().into_iter().sum();
+    let total: u32 = schematics.gear_ratios().into_iter().sum();
 
-        Ok(format!("{total}"))
-    }
+    Ok(format!("{total}"))
 }
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
