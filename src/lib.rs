@@ -104,4 +104,12 @@ impl AoC {
         }
         Ok(())
     }
+
+    pub fn run_all_days(&self) -> Result<()> {
+        for day in self.0.values() {
+            day.run(None)?;
+        }
+
+        Ok(())
+    }
 }

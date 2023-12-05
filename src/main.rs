@@ -11,7 +11,14 @@ fn main() -> Result<()> {
 
     let aoc = AoC::new();
 
-    aoc.run_day(4)?;
+    if let Some(day) = std::env::args()
+        .nth(1)
+        .and_then(|n| n.parse::<usize>().ok())
+    {
+        aoc.run_day(day)?;
+    } else {
+        aoc.run_all_days()?;
+    }
 
     Ok(())
 }
