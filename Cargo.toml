@@ -6,6 +6,7 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+gcd = "2.3"
 color-eyre = { version = "0.6", default-features = false }
 inventory = "0.3"
 itertools = "0.12"
@@ -15,6 +16,7 @@ num_enum = "0.7"
 once_cell = "1"
 pathfinding = "4.1"
 regex = "1.7"
+slotmap = "1"
 
 [profile.dev]
 opt-level = 3
